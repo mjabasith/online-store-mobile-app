@@ -1,114 +1,88 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
 import React from 'react';
 import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
   StatusBar,
 } from 'react-native';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import ContactScreen from './Screens/ContactScreen'
+import DiscountsScreen from './Screens/DiscountsScreen'
+
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
+import ProductList from "./Screens/ProductList";
+import ProductDetail from "./Screens/ProductDetail";
+
+import Store from "./Store"
+
+
+const ProductStack = createStackNavigator();
+const Tab = createBottomTabNavigator();
+
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
+function ProductStackNavigator() {
+  return (
+    <ProductStack.Navigator>
+      <ProductStack.Screen 
+      name="ProductList" 
+      component={ProductList} 
+      options={{headerShown: false}}
+      />
+      <ProductStack.Screen 
+      name="ProductDetail" 
+      component={ProductDetail} 
+      options={{headerShown: false}}
+      />
+    </ProductStack.Navigator>
+  );
+}
 
 const App: () => React$Node = () => {
   return (
     <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
+    <StatusBar backgroundColor="#5DB075" barStyle="light-content" />
+      <Store>
+        <NavigationContainer>
+          <Tab.Navigator
+          screenOptions={({ route }) => ({
+            tabBarIcon: ({ focused, color, size }) => {
+              let iconName;
+  
+              if (route.name === 'Products') {
+                iconName = focused
+                  ? 'ios-home'
+                  : 'ios-home-outline';
+              } else if (route.name === 'Discounts') {
+                iconName = focused ? 'ios-pricetag' : 'ios-pricetag-outline';
+              } else if (route.name === 'Contact Us') {
+                iconName = focused ? 'ios-call' : 'ios-call-outline';
+              }
+  
+              return <Ionicons name={iconName} size={30} color={color} />;
+            },
+          })}
+          tabBarOptions={{
+            activeTintColor: '#5DB075',
+            inactiveTintColor: 'gray',
+            tabStyle: {
+              height: 50,
+            },
+            labelStyle: {
+              fontSize: 15,
+              margin: 0,
+              padding: 0,
+            },
+          }}
+          >
+            <Tab.Screen name="Products" component={ProductStackNavigator} />
+            <Tab.Screen name="Discounts" component={DiscountsScreen} />
+            <Tab.Screen name="Contact Us" component={ContactScreen} />
+          </Tab.Navigator>
+        </NavigationContainer>
+      </Store>
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
-  },
-  engine: {
-    position: 'absolute',
-    right: 0,
-  },
-  body: {
-    backgroundColor: Colors.white,
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
-  },
-});
 
 export default App;
